@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Pixbay Image Search</title>
+    <link rel="stylesheet" href="sökstil.css">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <h1>Pixbay Image Search</h1>
+            <div class="search-container">
+                <input type="text" id="searchTerm" placeholder="Enter search term...">
+                <select id="color">
+                    <option value="">Any color</option>
+                    <option value="black">Black</option>
+                    <option value="gray">Gray</option>
+                    <option value="red">Red</option>
+                    <option value="orange">Orange</option>
+                    <option value="yellow">Yellow</option>
+                    <option value="green">Green</option>
+                    <option value="blue">Blue</option>
+                    <option value="purple">Purple</option>
+                    <option value="pink">Pink</option>
+                    <option value="brown">Brown</option>
+                </select>
+                <button onclick="searchImages()">Search</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div id="imageContainer" class="image-container"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="page-buttons">
+                <button id="prevBtn" onclick="prevPage()" disabled>&laquo; Previous Page</button>
+                <button id="nextBtn" onclick="nextPage()" disabled>Next Page &raquo;</button>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const apiKey = '42325536-4dcfc8c3aa28b29fa78784482';
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentSearchTerm = '';
+        let currentColor = '';
+
+        function searchImages() {
+            const searchTerm = document.getElementById('searchTerm').value;
+            const color = document.getElementById('color').value;
+
+           
+            if (searchTerm !== currentSearchTerm || color !== currentColor) {
+                currentPage = 1;
+                currentSearchTerm = searchTerm;
+                currentColor = color;
+                fetchImages(searchTerm, color);
+            }
+        }
+
+        function fetchImages(searchTerm, color, page = 1) {
+            const url = `https://pixabay.com/api/?key=${apiKey}&q=${searchTerm}&colors=${color}&page=${page}&per_page=10`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    totalPages = Math.ceil(data.totalHits / 10);
+                    displayImages(data.hits);
+                });
+        }
+
+        function displayImages(images) {
+            const imageContainer = document.getElementById('imageContainer');
+            imageContainer.innerHTML = '';
+
+            images.forEach(image => {
+                const imgElement = document.createElement('img');
+                imgElement.src = image.webformatURL;
+
+                const tags = image.tags.split(',').map(tag => tag.trim()).join(', ');
+                const photographer = image.user;
+
+                const caption = document.createElement('p');
+                caption.textContent = `${tags} by ${photographer}`;
+
+                const div = document.createElement('div');
+                div.classList.add('image-item');
+                div.appendChild(imgElement);
+                div.appendChild(caption);
+
+                imageContainer.appendChild(div);
+            });
+
+            updatePaginationButtons();
+        }
+
+        function updatePaginationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage === totalPages;
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchImages(currentSearchTerm, currentColor, currentPage);
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                fetchImages(currentSearchTerm, currentColor, currentPage);
+            }
+        }
+    </script>
+</body>
+
+</html>

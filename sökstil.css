@@ -1,0 +1,94 @@
+body {
+    font-family: 'Arial';
+    background-image: url('background-image.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    align-items: center;
+    min-height: 100vh; 
+    margin: 0; 
+}
+
+.container {
+    max-width: 1500px;
+    width: 100%; 
+    padding: 20px;
+    box-sizing: border-box; 
+}
+
+h1 {
+    text-align: center;
+    font-size: 40px;
+    padding: 30px 0;
+}
+
+.search-container {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+input[type="text"], select {
+    flex: 1;
+    margin-right: 10px;
+    padding: 5px;
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.image-container {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: repeat(4, 1fr); 
+}
+
+.image-item img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+.page-buttons {
+    text-align: center;
+    margin-top: auto; 
+    width: 100%; /
+    padding-bottom: 20px; 
+}
+
+.page-buttons button {
+    margin: 0 5px;
+}
+
+
+@media screen and (max-width: 600px) {
+    .container {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .search-container {
+        flex-direction: column;
+    }
+
+    .search-container input[type="text"],
+    .search-container select {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .image-container {
+        grid-template-columns: repeat(1, 1fr); 
+    }
+}
